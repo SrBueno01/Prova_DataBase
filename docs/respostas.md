@@ -1,45 +1,56 @@
 ## 1. SGBD
 
-Escolhi utilizar um SGBD relacional como PostgreSQL, pois ele garante as propriedades ACID:
+Foi escolhido um SGBD relacional (PostgreSQL) devido à necessidade de integridade e consistência dos dados.
 
-* Atomicidade: garante que uma transação seja concluída totalmente ou não aconteça
-* Consistência: mantém os dados válidos conforme as regras do banco
-* Isolamento: impede que transações interfiram umas nas outras
-* Durabilidade: garante que os dados não sejam perdidos após serem salvos
+As propriedades ACID garantem confiabilidade:
 
-Isso é essencial em um sistema acadêmico, pois envolve notas, matrículas e dados sensíveis.
+* Atomicidade: transações são completas ou revertidas
+* Consistência: regras do banco são respeitadas
+* Isolamento: transações não interferem entre si
+* Durabilidade: dados persistem após commit
 
 ---
 
 ## Schemas
 
-O uso de schemas permite organizar melhor o banco de dados.
+O uso de schemas melhora organização e segurança:
 
-Separando em:
+* academico → dados principais (alunos, disciplinas, turmas, matrículas)
+* seguranca → controle de acesso e permissões
 
-* academico → dados principais do sistema
-* seguranca → controle de acesso
-
-Isso facilita manutenção, segurança e escalabilidade.
+Isso segue boas práticas de ambientes corporativos.
 
 ---
 
-## 2. Modelo Lógico
+## 2. Modelo Lógico (3FN)
 
 Aluno(id_aluno, nome, email, ativo)
+Professor(id_professor, nome, ativo)
+Disciplina(id_disciplina, nome, ativo)
+Turma(id_turma, id_disciplina, id_professor, semestre, ativo)
+Matricula(id_matricula, id_aluno, id_turma, nota, ativo)
 
-Professor(id_professor, nome)
+Este modelo está em 3FN pois:
 
-Disciplina(id_disciplina, nome)
-
-Matricula(id_matricula, id_aluno, id_disciplina, nota, ciclo, ativo)
+* elimina redundância
+* evita dependência parcial
+* todas as colunas dependem da chave primária
 
 ---
 
-## 5. Concorrência
+## 5. Concorrência (ACID)
 
-Quando dois usuários tentam alterar a mesma informação ao mesmo tempo, o banco de dados utiliza controle de transações.
+Em ambientes multiusuário, duas transações podem tentar alterar o mesmo registro simultaneamente.
 
-O isolamento garante que cada transação ocorra separadamente.
+O SGBD garante consistência através de:
 
-Os locks (bloqueios) impedem alterações simultâneas no mesmo dado, evitando inconsistência e corrupção das informações.
+* Isolamento: cada transação executa de forma independente
+* Locks: bloqueiam registros durante atualização
+* Controle de concorrência: evita sobrescrita e perda de dados
+
+---
+
+## Conclusão
+
+Esse controle garante integridade mesmo em alto volume de acessos simultâneos em sistemas acadêmicos.
+
